@@ -53,8 +53,3 @@ Viele Hundefutter-Hersteller geben keine Kalorien auf der Verpackung an – nur 
 - **TypeScript** – Interfaces, Typisierung, modularer Aufbau
 - **HTML5** – semantisches Markup, ARIA-Attribute
 - **CSS3** – eigene Design-Tokens, Tooltip, responsive Layout
-
----
-
-## 📚 Kontext
-Teil der **Softwareentwicklerin Frontend Javascript Zertifizierung** bei GFN (extern zertifiziert durch WPI), März – Juni 2026.
