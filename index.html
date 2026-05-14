@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PfotenKalorien</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="dist/main.js" defer></script>
+</head>
+<body>
+<div class="wrapper">
+ 
+  <h2 class="sr-only">PfotenKalorien – Kalorien aus Nährstoffangaben berechnen</h2>
+ 
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">
+      <span aria-hidden="true">🦴</span>
+    </div>
+    <div>
+      <p class="header-title">PfotenKalorien</p>
+      <p class="header-sub">Kalorien aus Nährstoffangaben berechnen</p>
+    </div>
+  </div>
+ 
+  <!-- Nährstoffe -->
+  <div class="card">
+    <p class="section-label">
+      Nährstoffe <span class="section-label-note">(% laut Verpackung)</span>
+    </p>
+    <div class="grid-2">
+      <div>
+        <label class="field-label" for="protein">Protein <span class="required-star">*</span></label>
+        <input type="number" id="protein" placeholder="z.B. 10" min="0" step="0.1" />
+      </div>
+      <div>
+        <label class="field-label" for="fat">Fett <span class="required-star">*</span></label>
+        <input type="number" id="fat" placeholder="z.B. 6" min="0" step="0.1" />
+      </div>
+      <div>
+        <label class="field-label" for="fiber">Rohfaser <span class="required-star">*</span></label>
+        <input type="number" id="fiber" placeholder="z.B. 0.5" min="0" step="0.1" />
+      </div>
+      <div>
+        <label class="field-label" for="ash">Rohasche <span class="optional-tag">optional</span></label>
+        <input type="number" id="ash" placeholder="z.B. 2.5" min="0" step="0.1" />
+      </div>
+<div>
+  <label class="field-label" for="weight">
+    Gewicht (g)
+    <span class="optional-tag">optional</span>
+    <span class="has-tooltip" tabindex="0" aria-describedby="tooltip-weight">
+      <span class="tooltip-icon">?</span>
+      <span role="tooltip" id="tooltip-weight">
+        Optionales Portionsgewicht – z.B. Gewicht einer Dose oder eines Beutels. Wenn angegeben, wird zusätzlich der Kalorienwert für diese Portion berechnet. Ohne Angabe wird nur kcal/100g berechnet.
+      </span>
+    </span>
+  </label>
+  <input type="number" id="weight" placeholder="z.B. 400" min="0" step="1" />
+</div>
+    </div>
+  </div>
+ 
+  <!-- Feuchtigkeit -->
+  <div class="card">
+    <label class="checkbox-label">
+      <input class="checkbox" type="checkbox" id="use-category" />
+      <span class="checkbox-text">Feuchtigkeit nicht auf der Verpackung angegeben</span>
+    </label>
+ 
+    <div id="category-section" class="hidden">
+      <p class="category-hint">Futtertyp auswählen – Feuchtigkeit wird geschätzt:</p>
+      <div class="grid-2-sm">
+        <button class="cat-btn" id="cat-dry" data-moisture="10">
+          <span class="cat-label">Trockenfutter</span>
+          <span class="cat-sub">~10 % Feuchtigkeit</span>
+        </button>
+        <button class="cat-btn" id="cat-wet" data-moisture="75">
+          <span class="cat-label">Nassfutter</span>
+          <span class="cat-sub">~75 % Feuchtigkeit</span>
+        </button>
+        <button class="cat-btn" id="cat-snack" data-moisture="14">
+          <span class="cat-label">Snack / Riegel</span>
+          <span class="cat-sub">~14 % Feuchtigkeit</span>
+        </button>
+        <button class="cat-btn" id="cat-barf" data-moisture="70">
+          <span class="cat-label">BARF / Rohfutter</span>
+          <span class="cat-sub">~70 % Feuchtigkeit</span>
+        </button>
+      </div>
+      <div class="moisture-custom-wrap">
+        <label class="field-label" for="moisture-custom">
+          Feuchtigkeit (%) <span class="optional-tag">anpassen wenn gewünscht</span>
+        </label>
+        <input type="number" id="moisture-custom" placeholder="z.B. 75" min="0" max="99" step="0.1" />
+      </div>
+    </div>
+ 
+    <div id="moisture-direct-section">
+      <label class="field-label" for="moisture-direct">Feuchtigkeit (%)</label>
+      <input type="number" id="moisture-direct" placeholder="z.B. 78" min="0" max="99" step="0.1" />
+    </div>
+  </div>
+ 
+  <!-- Button -->
+  <button class="calc-btn" id="calc-btn">Kalorien berechnen</button>
+ 
+  <!-- Fehler -->
+  <div id="error-box" class="warn-box error-box">
+    <p class="warn-text" id="error-text"></p>
+  </div>
+ 
+  <!-- Ergebnis -->
+  <div id="result-section" class="result-card hidden">
+    <p class="result-title">Ergebnis</p>
+    <div class="metrics-grid">
+      <div class="metric">
+        <p class="metric-label">kcal / 100 g</p>
+        <p class="metric-value" id="res-per100">–</p>
+      </div>
+      <div class="metric" id="res-total-wrap">
+        <p class="metric-label">kcal Portion</p>
+        <p class="metric-value" id="res-total">–</p>
+      </div>
+    </div>
+    <div class="metrics-grid metrics-grid--last">
+      <div class="metric">
+        <p class="metric-label">Feuchtigkeit (genutzt)</p>
+        <p class="metric-value" id="res-moisture">–</p>
+      </div>
+    <div class="metric">
+    <span class="has-tooltip" tabindex="0" aria-describedby="tooltip-nfe">
+        <p class="metric-label">NfE</p>
+        <p class="metric-value" id="res-nfe">–</p>
+        <span role="tooltip" id="tooltip-nfe">
+        <strong>NfE – stickstofffreie Extraktstoffe</strong><br>
+        Berechneter Anteil leicht verdaulicher Kohlenhydrate wie Stärke und Zucker. Umfasst lösliche Zucker, Stärke, Pektine und lösliche Zelluloseanteile – dienen als Energielieferanten.
+        </span>
+    </span>
+    </div>
+    </div>
+    <div class="warn-box" id="warn-nfe">
+      <p class="warn-text">⚠ NFE-Wert negativ – bitte Eingaben prüfen. Die Nährstoffangaben ergeben zusammen mehr als 100 %.</p>
+    </div>
+  </div>
+ 
+</div>
+
+</body>
+</html>
